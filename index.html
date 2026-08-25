@@ -57,6 +57,18 @@ const visibleGroceryName=(item)=>{
   if(typeof item==='object')return lang==='mr'?(item.mr||item.name||''):(item.name||item.mr||'');
   const found=lookup(String(item));return found?(lang==='mr'?found[2]:found[1]):String(item);
 };
+Object.assign(tools,{
+  grocery:['07','Home / shopping list','Grocery list','List','Add what you need, sort it into sections, and tick it off at the shop.'],
+  trip:['01','Travel / stops and times','Trip plan','Trip','Keep your stops and times together, then open directions when you are ready to leave.'],
+  budget:['02','Travel / cost estimate','Trip cost estimate','Budget','Add your own travel costs and see a simple total with a lower and higher estimate.'],
+  meal:['08','Home / ingredients','Meal ingredients','Meals','Paste ingredients from a meal idea, then move the useful ones to your grocery list.'],
+  packing:['03','Travel / checklist','Packing list','Pack','Build a checklist for this trip, starting with a simple packing profile if helpful.'],
+  grocerybudget:['09','Home / shopping budget','Shopping budget','Spend','List the amounts you expect to spend and compare the total with the limit you set.'],
+  medication:['04','Personal / reminders','Medication reminders','Notes','Keep your own reminders and refill notes together. This is a planning list, not medical advice.'],
+  diabetes:['05','Personal / routine','Daily-care checklist','Routine','Keep the routine tasks you already follow in one short checklist. This tool does not assess readings.'],
+  thyroid:['06','Personal / notes','Thyroid notes','Routine','Save the questions and refill notes you want to bring to your next appointment.'],
+  appointment:['10','Personal / appointment notes','Appointment notes','Notes','Collect questions, papers, and reminders before an appointment.']
+});
 grocery=()=>{
   const groceries=db('grocery'),categories=['kitchen','produce','dairy','beverages','snacks','cleaning','personal','household','other'];
   const grouped=Object.fromEntries(categories.map(c=>[c,groceries.filter(x=>(x.cat||'other')===c)]));
@@ -77,6 +89,10 @@ if(location.pathname==='/'||location.pathname===''){
   const top=document.querySelector('.top');
   if(top)top.innerHTML=`<a class="brand" href="/"><i>✦</i> daymark<i>.</i>tools</a><nav class="mono" style="display:flex;gap:16px"><a href="#start">Start here</a><a href="#tools">All tools</a><a href="/guides">Guides</a></nav>`;
   if(hero&&!document.querySelector('#start'))hero.insertAdjacentHTML('afterend',`<section id="start" class="app" style="padding-top:18px;padding-bottom:18px"><section class="work" style="grid-column:1/-1"><div class="eyebrow">Start here / no account required</div><h2>One practical homepage. Ten browser-local tools.</h2><p class="copy">Build a shopping list, plan a trip, compare a budget, or organise everyday notes. Pick one clear starting point below—your information stays in this browser.</p><div class="grid three" style="margin-top:20px"><button class="tool active" onclick="choose('grocery');location.hash='tools'" style="border:1px solid var(--line)"><span class="num">01</span><span><strong>Make a grocery list</strong><small>Type any item, any language</small></span><span>↗</span></button><button class="tool" onclick="choose('trip');location.hash='tools'" style="border:1px solid var(--line)"><span class="num">02</span><span><strong>Plan a trip</strong><small>Stops, maps, budget</small></span><span>↗</span></button><button class="tool" onclick="choose('meal');location.hash='tools'" style="border:1px solid var(--line)"><span class="num">03</span><span><strong>Turn meals into groceries</strong><small>Paste ingredients to sort</small></span><span>↗</span></button></div></section></section>`);
+  const heroCopy=hero?.querySelector(':scope > div:first-child');
+  if(heroCopy)heroCopy.innerHTML=`<div class="eyebrow">Daymark Tools</div><h1>Plans for the day,<br><em>without the fuss.</em></h1><p>A simple place for shopping lists, trips, small budgets, and reminders. No account needed. Your lists stay in your browser.</p><a class="btn primary" href="#start">Choose a tool ↓</a>`;
+  const startPanel=document.querySelector('#start .work');
+  if(startPanel)startPanel.innerHTML=`<div class="eyebrow">Start with a task</div><h2>What do you need to sort out today?</h2><p class="copy">Choose a tool, add your details, and come back whenever you need it. Daymark does not ask you to create an account.</p><div class="grid three" style="margin-top:20px"><button class="tool active" onclick="choose('grocery');location.hash='tools'" style="border:1px solid var(--line)"><span class="num">01</span><span><strong>Shopping list</strong><small>Add what you need and keep it sorted.</small></span><span>↗</span></button><button class="tool" onclick="choose('trip');location.hash='tools'" style="border:1px solid var(--line)"><span class="num">02</span><span><strong>Trip plan</strong><small>Keep stops, times, and directions together.</small></span><span>↗</span></button><button class="tool" onclick="choose('meal');location.hash='tools'" style="border:1px solid var(--line)"><span class="num">03</span><span><strong>Meal ingredients</strong><small>Turn a rough note into a shopping list.</small></span><span>↗</span></button></div>`;
 }
-render();
+toolList($('#search')?.value||'');render();
 </script></body></html>
